@@ -19,6 +19,9 @@ def generate_slab_phantom(size, voxelsize, iso, slab_defs, phantom_name='slab'):
     # write Monte Carlo geo.txt file
     center = list(iso)
     center[2] += (voxelsize[2]*size[2]/2.)
+    print("Generatring %s slab phantom:"%phantom_name)
+    print(" Isocenter is at %s"%str(center))
+    print(" Phantom size in voxel is %s"%str(size))
     with open(os.path.join(OUTPUT_DIR, "mcgeo_{!s}.txt").format(phantom_name), 'w') as fd:
         fd.write("{:d} {:d} {:d}\n".format(*size))
         fd.write("{:f} {:f} {:f}\n".format(*voxelsize))
@@ -37,7 +40,7 @@ def generate_slab_phantom(size, voxelsize, iso, slab_defs, phantom_name='slab'):
     dens = dens.reshape(size[::-1])
     dens = np.concatenate([np.zeros((4, size[1], size[0])), dens], axis=0)
     vol = Volume.CenterAt(np.ascontiguousarray(np.transpose(dens.astype('f'), (1,0,2))), (0, voxelsize[1]*(dens.shape[1]-4)/20, 0), np.divide(voxelsize, 10))
-    print(vol.data.shape)
+    print(" Data written to file is of size %s"%str(vol.data.shape))
     vol.generate(os.path.join(OUTPUT_DIR, 'phantom_{!s}.h5'.format(phantom_name)))
     fmaps = Fmaps()
     fmap_wts = np.ones((10,10))
@@ -79,7 +82,21 @@ def slab_phantom():
     ]
     generate_slab_phantom(size, voxelsize, iso, slab_defs, 'slab')
 
+def lung_slab_phantom():
+    size = (40, 40, 52)
+    voxelsize = (2.5, 2.5, 2.5) # mm
+    iso = [0, 0, 0]
+
+    unit_pix = 4
+    slab_defs = [
+        (5*unit_pix, water),
+        (3*unit_pix, icrp_lung_inflated),
+        (5*unit_pix, water),
+    ]
+    generate_slab_phantom(size, voxelsize, iso, slab_defs, 'lung')
+
 
 if __name__ == "__main__":
     water_phantom()
     slab_phantom()
+    lung_slab_phantom()
