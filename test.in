@@ -17,7 +17,7 @@
 /control/execute square_field_gps.mac
 
 # generate HepRap file according to settings in vis.mac
-# /control/execute vis.mac
+/control/execute vis.mac
 
 # Periodic Output Technique (8 x 32 batches)
 /run/beamOn 10   # test periodic output

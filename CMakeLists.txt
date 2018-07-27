@@ -77,7 +77,7 @@ install(FILES
 # install(DIRECTORY
 #     ${PROJECT_SOURCE_DIR}/analysis
 #     DESTINATION ${PROJECT_NAME})
-install(TARGETS ${PROJECT_NAME} DESTINATION .)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${PROJECT_NAME})
 # install(CODE "execute_process( \
 #     COMMAND ${CMAKE_COMMAND} -E create_symlink \
 #     ${PSF_PATH} ${CMAKE_INSTALL_PREFIX}/PSF)"

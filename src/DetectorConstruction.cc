@@ -94,11 +94,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4VPhysicalVolume *pWorld = new G4PVPlacement(0, G4ThreeVector(), lWorld, "World", 0, false, 0);
 
 	//compile and run, visualize
-    ReadPhantom();
-    MapMaterials();
-    CreatePhantom();
+//    ReadPhantom();
+//    MapMaterials();
+//    CreatePhantom();
 
-    SanityCheck();
+        // use a box to replace geometry
+	G4double boxx, boxy, boxz, dx, dy, dz;
+	boxx = 9 * cm;
+	boxy = 9 * cm;
+	boxz = 12.8 * cm;
+
+	//add 10x10x10 cm3 box
+	G4Box *sBox = new G4Box("sBox", boxx / 2., boxy / 2., boxz / 2.);
+	G4LogicalVolume *lBox = new G4LogicalVolume(sBox, G4Water, "lBox");
+	G4VPhysicalVolume *pBox = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), lBox, "pBox", lWorld, false,1);
+//
+//
+//	SanityCheck();
 	return pWorld;
 }
 
@@ -282,7 +294,8 @@ void DetectorConstruction::ConstructSDandField() {
     G4MultiFunctionalDetector *mfd = new G4MultiFunctionalDetector("mfd");
     G4cout << "Attaching Dose MFD of name " << mfd->GetName() << " to SDmanager" << G4endl;
     sdmanager->AddNewDetector(mfd);
-    SetSensitiveDetector("lRepX", mfd);
+//    SetSensitiveDetector("lRepX", mfd);
+//    SetSensitiveDetector("lBox", mfd);  // use a cube to replace the real phantom
 
     // create filters
     G4SDParticleFilter* gammaFilter = new G4SDParticleFilter("gammaFilter", "gamma");
